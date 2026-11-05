@@ -1,19 +1,11 @@
 name: Build firmware for Nuvoton
 
+# AVR B6 builds run automatically; legacy ARM builds remain available on demand.
 on:
-  push:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'src/hardware/atmega32/**'
-      - '.github/workflows/atmega.yml'
+  workflow_dispatch:
 
-  pull_request:
-    paths-ignore:
-      - 'docs/**'
-      - 'README.md'
-      - 'src/hardware/atmega32/**'
-      - '.github/workflows/atmega.yml'
+permissions:
+  contents: read
 
 jobs:
   build:
@@ -24,13 +16,13 @@ jobs:
         run: | 
             sudo apt-get install -y git cmake openocd gcc-arm-none-eabi 
 
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build Project
         run: | 
             git submodule init
             git submodule update
-            ./bootstrap-arm
+            cmake . -DCMAKE_TOOLCHAIN_FILE=arm-toolchain.cmake -G "Unix Makefiles"
             make
             
       - name: Print contents
@@ -40,7 +32,7 @@ jobs:
 
 
       - name: Upload Artifacts 
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: novuton
           path: | 

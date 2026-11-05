@@ -22,3 +22,7 @@ Makefile
 cmake_install.cmake
 src/core/Version.h
 build_ubuntu.sh
+/build/
+/dist/
+__pycache__/
+*.pyc

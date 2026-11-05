@@ -1,42 +1,41 @@
-name: Build firmware for Atmega
+name: Build B6 50W firmware
 
 on:
   push:
+    branches: [master, b6-50w]
     paths-ignore:
       - 'docs/**'
       - 'README.md'
       - 'src/hardware/nuvoton*/**'
       - '.github/workflows/novuton.yml'
-
   pull_request:
     paths-ignore:
       - 'docs/**'
       - 'README.md'
       - 'src/hardware/nuvoton*/**'
       - '.github/workflows/novuton.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
+  b6-50w:
+    runs-on: ubuntu-24.04
     steps:
-      - name: Install Packages 
-        run: | 
-            sudo apt-get install -y cmake avr-libc gcc-avr git
-            
-      - uses: actions/checkout@v3
-
-      - name: Build Project
-        run: | 
-            git submodule init
-            git submodule update
-            ./bootstrap-avr
-            make
-            
-      - name: Upload Artifacts 
-        uses: actions/upload-artifact@v3
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          name: atmega32
-          path: | 
-                src/hardware/atmega32/targets/**/*.hex
-                src/hardware/atmega32/targets/**/progUSBasp.sh
+          persist-credentials: false
+      - name: Install AVR tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y cmake make gcc-avr binutils-avr avr-libc python3
+      - name: Build and validate the 50W target
+        run: python3 scripts/build_b6_50w.py
+      - name: Upload firmware and provenance
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: b6-50w-${{ github.sha }}
+          path: dist/b6-50w/*
+          if-no-files-found: error
+          retention-days: 90

@@ -1,6 +1,9 @@
 Welcome to cheali-charger!
 ==========================
 
+Taxom B6 50W build: gromdar's Pb/AGM firmware without runtime changes, with a
+dedicated AVR build. See [B6 50W build and calibration notes](docs/Taxom-B6-50W.md).
+
 This project is an alternative firmware to a variety of lipo chargers,  
 see [hardware.](README.md#hardware)
 
