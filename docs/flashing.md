@@ -22,7 +22,11 @@ flashing using [avrdude](http://www.nongnu.org/avrdude/)
 --------------------------------------------------------
 
 The simplest way to flash a charger is to use [avrdude](http://www.nongnu.org/avrdude/) in command line:  
-(you may want to change `-cusbasp` according to your programmer. If you use ArduinoISP, set `-cstk500v1 -P[COM port] -b19200`)
+(you may want to change `-cusbasp` according to your programmer. With ArduinoISP and AVRDUDE 8, use `-c arduino_as_isp -P [COM port] -b 19200`.)
+
+AVRDUDE 8 distinguishes ArduinoISP from the original STK500 v1 for EEPROM addressing.
+Using `-c stk500v1` with ArduinoISP can produce an incomplete EEPROM backup even when
+the reported file size is correct. Use `arduino_as_isp` for EEPROM reads, writes and verification.
 
 - try to make a backup:
 <pre>
